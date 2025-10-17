@@ -1,0 +1,9 @@
+
+real	0m0.011s
+user	0m0.000s
+sys	0m0.008s
+Generating edge indices:   0%|          | 0/199 [00:00<?, ?it/s]Generating edge indices:   1%|          | 1/199 [00:00<01:07,  2.93it/s]Generating edge indices:   7%|▋         | 14/199 [00:00<00:04, 40.34it/s]Generating edge indices:  13%|█▎        | 26/199 [00:00<00:02, 63.37it/s]Generating edge indices:  21%|██        | 41/199 [00:00<00:01, 88.76it/s]Generating edge indices:  28%|██▊       | 56/199 [00:00<00:01, 105.60it/s]Generating edge indices:  36%|███▌      | 72/199 [00:00<00:01, 121.10it/s]Generating edge indices:  43%|████▎     | 86/199 [00:00<00:00, 126.39it/s]Generating edge indices:  50%|█████     | 100/199 [00:01<00:00, 129.75it/s]Generating edge indices:  57%|█████▋    | 114/199 [00:01<00:00, 121.35it/s]Generating edge indices:  65%|██████▍   | 129/199 [00:01<00:00, 126.43it/s]Generating edge indices:  72%|███████▏  | 144/199 [00:01<00:00, 130.00it/s]Generating edge indices:  79%|███████▉  | 158/199 [00:01<00:00, 129.87it/s]Generating edge indices:  87%|████████▋ | 174/199 [00:01<00:00, 137.88it/s]Generating edge indices:  95%|█████████▍| 189/199 [00:01<00:00, 138.37it/s]Generating edge indices: 100%|██████████| 199/199 [00:01<00:00, 111.37it/s]
+
+real	0m0.133s
+user	0m0.000s
+sys	0m0.008s

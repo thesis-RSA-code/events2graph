@@ -1,0 +1,44 @@
+**********************************************************************
+*                         SLURM Batch System                         *
+*              IN2P3 Computing Centre, Villeurbanne FR               *
+**********************************************************************
+* Date:                 Mon Sep 29 03:36:39 PM CEST 2025
+* Job name:             teset_mu-_edge_generator
+* Job id:               6880755
+* User:                 elebleve
+* Account:              t2k
+* Submit host:          cca015
+* Partition:            gpu
+* Quality of service:   gpu
+* Nodelist:             ccwgslurm0101
+* Operating System:     Red Hat Enterprise Linux release 9.6 (Plow)
+* Architecture:         x86_64
+**********************************************************************
+Using provided job directory: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/jobs/25_09_29_15_36_knn_pyg_k5_xyz_e3d_mu-_50-1500MeV
+Copying H5 file to: /tmp/full_vars_hierar_mu-_50-1500MeV_folder0_a399.h5  
+Starting edge generation...
+Working directory: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph
+Python script: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/edge_index_generator.py
+Config file: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/jobs/25_09_29_15_36_knn_pyg_k5_xyz_e3d_mu-_50-1500MeV/edge_config.yaml
+
+Preparing to generate edge indices...
+Algorithm: knn_pyg
+Using device cuda
+Metric: euclidean_3d
+Pos features: ['hitx', 'hity', 'hitz']
+Combine files: False
+**********************************************************************
+* Error: Edge generation failed                                    *
+* Job directory with intermediate files preserved: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/jobs/25_09_29_15_36_knn_pyg_k5_xyz_e3d_mu-_50-1500MeV
+**********************************************************************
+****************************************************************
+*                      SLURM Batch System                      *
+*           IN2P3 Computing Centre, Villeurbanne FR            *
+****************************************************************
+Date: Mon Sep 29 03:37:10 PM CEST 2025
+Job informations can be found using these commands:
+Accounting:
+sacct -j 6880755
+Efficiency:
+seff 6880755
+****************************************************************

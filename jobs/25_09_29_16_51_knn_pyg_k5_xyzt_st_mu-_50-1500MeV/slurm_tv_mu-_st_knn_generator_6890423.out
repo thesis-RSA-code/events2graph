@@ -1,0 +1,66 @@
+**********************************************************************
+*                         SLURM Batch System                         *
+*              IN2P3 Computing Centre, Villeurbanne FR               *
+**********************************************************************
+* Date:                 Mon Sep 29 04:51:36 PM CEST 2025
+* Job name:             tv_mu-_st_knn_generator
+* Job id:               6890423
+* User:                 elebleve
+* Account:              t2k
+* Submit host:          cca015
+* Partition:            gpu
+* Quality of service:   gpu
+* Nodelist:             ccwgslurm0102
+* Operating System:     Red Hat Enterprise Linux release 9.6 (Plow)
+* Architecture:         x86_64
+**********************************************************************
+Using provided job directory: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/jobs/25_09_29_16_51_knn_pyg_k5_xyzt_st_mu-_50-1500MeV
+Copying H5 file to: /tmp/full_vars_hierar_mu-_50-1500MeV_folder400_a1000.h5  
+Starting edge generation...
+Working directory: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph
+Python script: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/edge_index_generator.py
+Config file: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/jobs/25_09_29_16_51_knn_pyg_k5_xyzt_st_mu-_50-1500MeV/edge_config.yaml
+
+Preparing to generate edge indices...
+Algorithm: knn_pyg
+Using device cuda
+Metric: spacetime
+Pos features: ['hitx', 'hity', 'hitz', 'time']
+Combine files: False
+Edges will be saved as direct event datasets: event_1, event_2, etc.
+Using two file approach: creating '/tmp/knn5_xyzt_mu-_50-1500MeV_folder400_a1000.h5'
+
+Processing completed. Edge file '/tmp/knn5_xyzt_mu-_50-1500MeV_folder400_a1000.h5' created with edge indices.
+
+==================================================
+MONITORING SUMMARY
+==================================================
+
+--- Loading Phase ---
+RAM before loading : 441.55 MB
+
+--- Processing Phase (Loop) ---
+Number of RAM samples taken : 118
+RAM at start of loop        : 464.46 MB (event #0)
+Maximum RAM reached        : 1051.23 MB
+RAM at end of loop         : 1051.23 MB (event #58500)
+Delta with max RAM      : +609.68 MB
+
+==================================================
+
+Average edge processing time per event: 0.0021 seconds
+Total events processed: 58876
+Edge generation completed successfully
+Copying edge file back to: /sps/t2k/eleblevec/Datasets/custom_dataset/mu-/50-1500MeV/train_val_400_a1000/h5_edges/knn5_xyzt_mu-_50-1500MeV_folder400_a1000.h5
+Temporary files cleaned up, job directory preserved: /sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/jobs/25_09_29_16_51_knn_pyg_k5_xyzt_st_mu-_50-1500MeV
+****************************************************************
+*                      SLURM Batch System                      *
+*           IN2P3 Computing Centre, Villeurbanne FR            *
+****************************************************************
+Date: Mon Sep 29 04:58:01 PM CEST 2025
+Job informations can be found using these commands:
+Accounting:
+sacct -j 6890423
+Efficiency:
+seff 6890423
+****************************************************************

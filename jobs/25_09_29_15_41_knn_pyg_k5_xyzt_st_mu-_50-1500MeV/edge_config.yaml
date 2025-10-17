@@ -1,0 +1,39 @@
+# Configuration file for edge index generation
+
+# muon test set
+# h5_data_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/mu-/50-1500MeV/test_0_a399/h5_data/full_vars_hierar_mu-_50-1500MeV_folder0_a399.h5"  
+# output_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/mu-/50-1500MeV/test_0_a399/h5_edges/knn5_xyz_mu-_50-1500MeV_folder0_a399.h5"
+# muon train val set
+# h5_data_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/mu-/50-1500MeV/train_val_400_a1000/h5_data/full_vars_hierar_mu-_50-1500MeV_folder400_a1000.h5"  
+# output_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/mu-/50-1500MeV/train_val_400_a1000/h5_edges/knn5_xyz_mu-_50-1500MeV_folder400_a1000.h5"
+# electron test set
+# h5_data_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/e-/50-1500MeV/test_folder_0_a399/h5_data/full_vars_hierar_e-_50-1500MeV_folder0_a399.h5"  
+# output_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/e-/50-1500MeV/test_folder_0_a399/h5_edges/knn5_xyz_e-_50-1500MeV_folder0_a399.h5"
+# electron train val set
+# h5_data_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/e-/50-1500MeV/train_val_folder_400_a1000/h5_data/full_vars_hierar_e-_50-1500MeV_folder400_a1000.h5"  
+# output_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/e-/50-1500MeV/train_val_folder_400_a1000/h5_edges/knn5_xyz_e-_50-1500MeV_folder400_a1000.h5"
+
+# ---------------------------------
+h5_data_file: "/tmp/full_vars_hierar_mu-_50-1500MeV_folder0_a399.h5  "  
+output_file: "/tmp/knn5_xyzt_mu-_50-1500MeV_folder0_a399.h5"
+
+# File handling approach
+combine_files: false  # true: add edges to data file, false: create separate edge file
+
+pos_features: ["hitx", "hity", "hitz", "time"]  # Features from HDF5 to use for edge construction
+algorithm: "knn_pyg"  # Options: knn_pyg, knn_scipy, delaunay, radius
+metric: "spacetime"          # Options: spacetime, euclidean_3d, weighted_euclidean, or null for no transformation
+
+algorithm_params:
+  k: 5  
+# Metric parameters (optional)
+# metric_params: null
+
+# HDF5 settings
+compression: "gzip"  # Options: "gzip", "lzf", "none"
+overwrite: false  # Whether to overwrite existing edge datasets
+
+# Monitoring settings
+use_timeit: true  # Measure computation time 
+monitor_ram: true
+monitor_interval: 500  # Check RAM every N events
