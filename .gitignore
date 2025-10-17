@@ -1,0 +1,14 @@
+
+
+configs/*
+!configs/
+
+jobs/*
+!jobs/
+
+notebooks/*
+!notebooks/
+
+# pycache
+__pycache__/
+*.pyc
