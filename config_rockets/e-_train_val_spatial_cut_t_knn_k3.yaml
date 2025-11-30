@@ -1,18 +1,25 @@
 
 
 
-h5_data_file: "/home/amaterasu/work/mini-Caverns/h5_data/hierarchical_e-_50-1500MeV_folder3_a5.h5"
-output_file: "/home/amaterasu/work/mini-Caverns/h5_edges/e-_50-1500MeV_folder3_a5_spatial_cut_Lt_knn5.h5"
+
+# train val folders
+h5_data_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/e-/50-1500MeV/Ndigit_40_1Mevents/train_val_1001_a10000/h5_data/e-_50-1500MeV_folder1001_a10000.h5"
+output_file: "/sps/t2k/eleblevec/Datasets/custom_dataset/e-/50-1500MeV/Ndigit_40_1Mevents/train_val_1001_a10000/h5_edges/knn3_xyz_cut_t900-1400_q03-1000_e-_50-1500MeV_folder1001_a10000.h5"
+
 
 # File handling approach
 combine_files: false  # true: add edges to data file, false: create separate edge file
 
 # Single selection
 node_selection:
-  type: percentile
-  lower_percentile: 5.0
-  upper_percentile: 90.0
-  use_landau_fit: true
+    type: fixed
+    time_cut:
+      min: 900
+      max: 1400 # 950 + 440  (time for direct light to travel accross the detector is ~440 ns)
+    type: fixed
+    charge_cut:
+      min: 0.3
+      max: 1000.0
 
 # -- Define the metric space ---
 pos_features: ["hitx", "hity", "hitz"]  # Features from HDF5 to use for edge construction
@@ -22,7 +29,7 @@ metric: null          # Options: spacetime, weighted_euclidean, or null for no t
 # Define the algorithm
 algorithm: "knn_pyg"  # Options: knn_pyg, knn_scipy, delaunay, radius
 algorithm_params:
-  k: 5  
+  k: 3  
 
 
 # HDF5 settings
@@ -31,5 +38,7 @@ overwrite: true  # Whether to overwrite existing edge datasets
 
 # Monitoring settings
 use_timeit: true  # Measure computation time 
-monitor_ram: false
-monitor_interval: 500  # Check RAM every N events
+monitor_ram: true
+monitor_interval: 10000  # Check RAM every N events
+
+

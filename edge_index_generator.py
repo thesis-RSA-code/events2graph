@@ -167,6 +167,9 @@ def main(args):
         event_names = [name for name in data_file.keys() if name.startswith('event_')]
         event_names.sort(key=lambda x: int(x.split('_')[1]))
         total_events = len(event_names)
+        
+        # Calculate sampling interval for timing (collect ~5% of events for statistics)
+        timing_sample_interval = max(1, total_events // 20) if args.use_timeit else None
 
         for event_idx, event_name in enumerate(tqdm(event_names, desc="Generating edge indices")):
             
@@ -203,10 +206,11 @@ def main(args):
                 selection_mask = None
 
             # Generate edge index using EdgeBuilder
-            start_time = time.time()
+            start_time = time.time() if args.use_timeit else None
             edge_index = edge_builder.compute_edge_index(filtered_coords)
 
-            if args.use_timeit:
+            # Sample timing data for only ~5% of events to reduce memory usage
+            if args.use_timeit and event_idx % timing_sample_interval == 0:
                 edge_process_time_per_event.append(time.time() - start_time)
 
             # Remove existing datasets if overwriting
@@ -231,6 +235,13 @@ def main(args):
                     compression=args.compression
                 )
             
+            # Clean up temporary arrays to free memory
+            del raw_edge_coords
+            del filtered_coords
+            del edge_index
+            if selection_mask is not None:
+                del selection_mask
+            
     if args.combine_files:
         print(f"\nProcessing completed. File '{args.h5_data_file}' enriched with edge indices.")
     else:
@@ -243,8 +254,18 @@ def main(args):
     # Print timing summary if requested
     if args.use_timeit and edge_process_time_per_event:
         avg_time = np.mean(edge_process_time_per_event)
-        print(f"\nAverage edge processing time per event: {avg_time:.4f} seconds")
-        print(f"Total events processed: {len(edge_process_time_per_event)}")
+        std_time = np.std(edge_process_time_per_event)
+        min_time = np.min(edge_process_time_per_event)
+        max_time = np.max(edge_process_time_per_event)
+        print("\n" + "="*50)
+        print("TIMING STATISTICS (sampled from ~5% of events)")
+        print("="*50)
+        print(f"Number of samples:     {len(edge_process_time_per_event)}")
+        print(f"Average time per event: {avg_time:.4f} ± {std_time:.4f} seconds")
+        print(f"Min time:              {min_time:.4f} seconds")
+        print(f"Max time:              {max_time:.4f} seconds")
+        print(f"Estimated total time:  {avg_time * total_events / 3600:.2f} hours")
+        print("="*50)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate edge indices and save them in an HDF5 file.")

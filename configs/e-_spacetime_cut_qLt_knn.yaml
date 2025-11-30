@@ -32,7 +32,7 @@ algorithm_params:
 
 # HDF5 settings
 compression: "gzip"  # Options: "gzip", "lzf", "none"
-overwrite: false  # Whether to overwrite existing edge datasets
+overwrite: true  # Whether to overwrite existing edge datasets
 
 # Monitoring settings
 use_timeit: true  # Measure computation time 

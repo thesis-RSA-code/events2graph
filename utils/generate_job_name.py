@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
 Generate job folder name from YAML config file.
-Usage: python generate_job_name.py <yaml_file>
+Usage: python generate_job_name.py <yaml_file> [job_id]
 """
 
 import sys
+import os
 import yaml
 import re
 from datetime import datetime
@@ -84,7 +85,38 @@ def extract_particle_info(h5_file_path):
     
     return particle_type, energy_range
 
-def generate_job_name(yaml_file):
+def extract_cuts_info(config):
+    """Extract cut information from node_selection."""
+    cuts = []
+    
+    if "node_selection" in config and config["node_selection"] is not None:
+        node_sel = config["node_selection"]
+        
+        # Extract time cut
+        if "time_cut" in node_sel and node_sel["time_cut"] is not None:
+            time_cut = node_sel["time_cut"]
+            if "min" in time_cut and "max" in time_cut:
+                min_val = int(time_cut["min"]) if isinstance(time_cut["min"], (int, float)) else time_cut["min"]
+                max_val = int(time_cut["max"]) if isinstance(time_cut["max"], (int, float)) else time_cut["max"]
+                cuts.append(f"t{min_val}-{max_val}")
+        
+        # Extract charge cut
+        if "charge_cut" in node_sel and node_sel["charge_cut"] is not None:
+            charge_cut = node_sel["charge_cut"]
+            if "min" in charge_cut and "max" in charge_cut:
+                # Format charge values without decimal points (0.3 -> 03, 1.5 -> 15)
+                min_val = charge_cut["min"]
+                max_val = charge_cut["max"]
+                
+                # Convert to string and remove decimal point
+                min_str = str(min_val).replace(".", "")
+                max_str = str(int(max_val)) if isinstance(max_val, (int, float)) and max_val == int(max_val) else str(max_val).replace(".", "")
+                
+                cuts.append(f"q{min_str}-{max_str}")
+    
+    return "_" + "_".join(cuts) if cuts else ""
+
+def generate_job_name(yaml_file, job_id=None):
     """Generate job folder name from YAML config."""
     try:
         with open(yaml_file, 'r') as f:
@@ -107,12 +139,21 @@ def generate_job_name(yaml_file):
         # Extract particle info
         particle_type, energy_range = extract_particle_info(h5_file_path)
         
-        # Generate date prefix
-        date_prefix = datetime.now().strftime("%y_%m_%d_%H_%M")
+        # Extract cuts info
+        cuts_info = extract_cuts_info(config)
+        
+        # Generate date and time with milliseconds (YYMMDD_HHMM_ms_XXX format)
+        now = datetime.now()
+        date_part = now.strftime("%y%m%d")  # 251019
+        time_part = now.strftime("%H%M")    # 1430
+        milliseconds = now.microsecond // 1000  # Convert microseconds to milliseconds (0-999)
         
         # Build job folder name
-        # Format: date_algorithm_params_posfeatures_metric_particle_energy
-        job_parts = [date_prefix, f"{algorithm}{algorithm_params}", pos_features]
+        # Format: YYMMDD_HHMM_ms_XXX_algorithm_params_posfeatures_metric_particle_energy_cuts
+        job_parts = [f"{date_part}_{time_part}_ms_{milliseconds:03d}"]
+
+        job_parts.append(f"{algorithm}{algorithm_params}")
+        job_parts.append(pos_features)
         
         if metric_info:
             job_parts.append(metric_info[1:])  # Remove leading underscore
@@ -121,6 +162,9 @@ def generate_job_name(yaml_file):
         
         if energy_range:
             job_parts.append(energy_range)
+        
+        if cuts_info:
+            job_parts.append(cuts_info[1:])  # Remove leading underscore
         
         job_name = "_".join(job_parts)
         
@@ -131,10 +175,12 @@ def generate_job_name(yaml_file):
         sys.exit(1)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python generate_job_name.py <yaml_file>", file=sys.stderr)
+    if len(sys.argv) < 2 or len(sys.argv) > 3:
+        print("Usage: python generate_job_name.py <yaml_file> [job_id]", file=sys.stderr)
         sys.exit(1)
     
     yaml_file = sys.argv[1]
-    job_name = generate_job_name(yaml_file)
+    job_id = sys.argv[2] if len(sys.argv) == 3 else None
+    
+    job_name = generate_job_name(yaml_file, job_id)
     print(job_name)

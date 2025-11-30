@@ -4,19 +4,21 @@
 # Usage: ./submit_edge_generator.sh <yaml_config_file>
 #
 # SLURM Configuration (edit these values as needed):
-SLURM_TIME="0-00:15:00"      # Time limit
-SLURM_MEM="2G"              # Memory limit
-JOB_NAME="tv_mu-_st_knn"
+SLURM_TIME="0-10:00:00"      # Time limit
+SLURM_MEM="70G"              # Memory limit
+JOB_NAME="1M_e-_tv_sp_cut_tq"
+
+# SLURM parameters
+SLURM_CPUS=4
+SLURM_GPU=1
+SLURM_GPU_TYPE="h100" # v100 or h100
 
 # Directory Configuration (edit these paths as needed):
 MINICONDA_DIR="/sps/t2k/eleblevec/miniconda3"                    # Miniconda installation path
-JOBS_DIR="/sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph/jobs"  # Where job folders are created
-ROOTGRAPH_DIR="/sps/t2k/eleblevec/mini-Caverns-toolsbox/root2graph"  # Main project directory
+JOBS_DIR=${JOBS_DIR:-"/sps/t2k/eleblevec/mini-Caverns-toolsbox/events2graph/jobs"}
+ROOTGRAPH_DIR=${ROOTGRAPH_DIR:-"/sps/t2k/eleblevec/mini-Caverns-toolsbox/events2graph"}
+PYTHON_ENV_NAME=${PYTHON_ENV_NAME:-"grant_cuda_12_1"}
 
-# Fixed SLURM parameters
-SLURM_CPUS=1
-SLURM_GPU=1
-SLURM_PARTITION="gpu"
 
 
 # --------- EXECUTED CODE --------- #
@@ -59,17 +61,26 @@ mkdir -p "$JOB_DIR"
 SED_YAML_FILE="$JOB_DIR/edge_config.yaml"
 cp $yaml_file $SED_YAML_FILE
 
+if [ "$SLURM_GPU_TYPE" == "v100" ]; then
+    SLURM_PARTITION="gpu_v100"
+else
+    SLURM_PARTITION="gpu_h100"
+fi
+
 echo "Job directory: $JOB_DIR"
 echo "Job folder name: $JOB_FOLDER"
 echo "SLURM resources: Time=$SLURM_TIME, Memory=$SLURM_MEM"
+echo "SLURM partition: $SLURM_PARTITION"
+echo "SLURM NUMBER OF GPUs: $SLURM_GPU"
 echo "" 
 
 # Submit the job with output files directed to the job directory
 sbatch \
+    -p "$SLURM_GPU" \
+    --gpus $SLURM_GPU \
+    --cpus-per-task="$SLURM_CPUS" \
     --time="$SLURM_TIME" \
     --mem="$SLURM_MEM" \
-    --cpus-per-task="$SLURM_CPUS" \
-    --gres=gpu:"$SLURM_GPU" \
     --partition="$SLURM_PARTITION" \
     --output="$JOB_DIR/slurm_%x_%j.out" \
     --error="$JOB_DIR/slurm_%x_%j.err" \

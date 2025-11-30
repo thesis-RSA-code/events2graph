@@ -55,6 +55,13 @@ def build_edges(coords: np.ndarray, k: int, **kwargs) -> np.ndarray: # kwargs ar
         # Le script principal s'attend à recevoir un ndarray.
         # .cpu() est nécessaire si le calcul a été fait sur GPU pour le ramener en RAM.
         edge_index_numpy = edge_index_tensor.cpu().numpy()
+        
+        # 5. Clean up GPU memory to prevent memory leaks
+        # Delete tensors and clear CUDA cache after each call
+        del pos_tensor
+        del edge_index_tensor
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
         return edge_index_numpy.astype(np.int64)
 
